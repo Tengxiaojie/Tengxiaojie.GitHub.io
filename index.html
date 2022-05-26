@@ -1,20 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta charset="UFF-8">
+    <meta charset="utf-8">
+    <title>Definition</title>
+    <!--[if lt IE 9]>
+        <script src="http://cdn.static.runoob.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
 </head>
 
 <body>
-
-<form id="myForm" action="https://www.baidu.com" method="post" target="myIframe">
-
-    文件上传：<input type="file"><br />
-
-    <br />
-    <input type="submit"  value="提交">
-</form>
-
-<iframe id="myIframe" name="myIframe" hidden></iframe>
-
+    <article>
+        <h2>file</h2>
+        <input type="file" id="files" onchange="draw()" webkitdirectory accept="image/*">
+    </article>
+    <section>
+        <canvas id="myCanvas" width=2000 height=5000></canvas>
+    </section>
 </body>
 
+<script type="text/javascript">
+    var imgPosY = 0;
+    function draw() {
+        // 获取选择到的文件
+        var files = document.getElementById("files").files;
+
+        for (var file of files) {
+            // console.log(file.webkitRelativePath);   // 显示图片的相对路径
+
+            // 读取文件内容
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            // 读完完成onload再执行function
+            reader.onload = function () {
+                var img = new Image();
+                // 图片内容从result获取
+                img.src = this.result;
+                // 图片读取内容完成后，执行function来添加到画布上
+                img.onload = function() {
+                    var myCanvas = document.getElementById("myCanvas");
+                    var cxt = myCanvas.getContext('2d');
+                    console.log(img.height);
+                    // (img, 图片左上角在画布的横坐标，~的纵坐标)
+                    cxt.drawImage(img, 0, imgPosY);			
+                    imgPosY += img.height;		// 采用接着上一张图的纵向排布
+                }
+            }
+        }
+    }
+</script>
+
+</html>
